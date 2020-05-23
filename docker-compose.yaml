@@ -12,5 +12,10 @@ services:
         target: 64738
         protocol: udp
         mode: host
+      - published: 50051
+        target: 50051
+        protocol: tcp
+        mode: host
     volumes:
+      # Change mountpoint (left part) to your needs.
       - '/home/murmur/data:/data'
