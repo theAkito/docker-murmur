@@ -1,6 +1,7 @@
 FROM debian:testing-slim AS build
 
 LABEL maintainer="Akito <the@akito.ooo>"
+LABEL version="0.1.0"
 
 ARG VERSION="1.3.1-rc1"
 
