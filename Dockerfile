@@ -35,7 +35,8 @@ WORKDIR /root/mumble
 
 RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     git fetch --all --tags --prune && \
-    git checkout tags/${VERSION} && \
+    #git checkout tags/${VERSION} && \ # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
+    git checkout 1.3.x && \
     qmake -recursive main.pro CONFIG+="no-client grpc" && \
     make release
 
@@ -59,10 +60,10 @@ RUN apt-get update && apt-get install -y \
 COPY --from=build /root/mumble/release/murmurd /usr/bin/murmurd
 
 EXPOSE 64738/tcp 64738/udp 50051
+
 USER murmur
 
 # Read murmur.ini and murmur.sqlite from /data/
 VOLUME ["/data"]
 
-ENTRYPOINT ["/usr/bin/murmurd", "-fg", "-v"]
-CMD ["-ini", "/data/murmur.ini", "|", "tee", "/data/murmur.log"]
+ENTRYPOINT ["/usr/bin/murmurd", "-fg", "-v", "-ini", "/data/murmur.ini"]
