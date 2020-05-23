@@ -3,7 +3,8 @@ FROM debian:testing-slim AS build
 LABEL maintainer="Akito <the@akito.ooo>"
 LABEL version="0.1.0"
 
-ARG VERSION="1.3.1-rc1"
+ARG TAG="1.3.1-rc1"
+ARG BRANCH="1.3.x"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -35,14 +36,16 @@ WORKDIR /root/mumble
 
 RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     git fetch --all --tags --prune && \
-    #git checkout tags/${VERSION} && \ # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
-    git checkout 1.3.x && \
+    # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
+    #git checkout tags/${TAG} && \
+    git checkout ${BRANCH} && \
     qmake -recursive main.pro CONFIG+="no-client grpc" && \
     make release
 
 FROM debian:testing-slim
 
-RUN adduser murmur
+RUN useradd --user-group --system --no-log-init \
+    --uid 800 --gid 800 --shell /bin/bash murmur
 RUN apt-get update && apt-get install -y \
     libcap2 \
     libzeroc-ice3.7 \
@@ -59,7 +62,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=build /root/mumble/release/murmurd /usr/bin/murmurd
 
-EXPOSE 64738/tcp 64738/udp 50051
+EXPOSE 64738/tcp
+EXPOSE 64738/udp
+EXPOSE 50051
 
 USER murmur
 
