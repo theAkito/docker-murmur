@@ -45,7 +45,8 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
 FROM debian:testing-slim
 
 RUN useradd --user-group --system --no-log-init \
-    --uid 800 --gid 800 --shell /bin/bash murmur
+    --uid 800 --shell /bin/bash murmur
+RUN mkdir /data && chown -R murmur:murmur /data
 RUN apt-get update && apt-get install -y \
     libcap2 \
     libzeroc-ice3.7 \
