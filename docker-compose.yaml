@@ -3,6 +3,7 @@ version: '3.3'
 services:
   murmur:
     image: akito13/murmur
+    container_name: murmur
     ports:
       - published: 64738
         target: 64738
