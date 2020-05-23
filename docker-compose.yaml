@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  gotify:
+  murmur:
     image: akito13/murmur
     ports:
       - published: 64738
@@ -12,6 +12,7 @@ services:
         target: 64738
         protocol: udp
         mode: host
+      # gRPC API Port
       - published: 50051
         target: 50051
         protocol: tcp
