@@ -33,8 +33,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /root/mumble
 
-RUN mkdir /root/mumble && \
-    git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
+RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     git fetch --all --tags --prune && \
     git checkout tags/${VERSION} && \
     qmake -recursive main.pro CONFIG+="no-client grpc" && \
