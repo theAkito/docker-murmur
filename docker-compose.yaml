@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  gotify:
+    image: akito13/murmur
+    ports:
+      - published: 64738
+        target: 64738
+        protocol: tcp
+        mode: host
+      - published: 64738
+        target: 64738
+        protocol: udp
+        mode: host
+    volumes:
+      - '/home/murmur/data:/data'
