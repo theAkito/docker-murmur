@@ -1,8 +1,5 @@
 FROM debian:testing-slim AS build
 
-LABEL maintainer="Akito <the@akito.ooo>"
-LABEL version="0.1.0"
-
 ARG TAG="1.3.1-rc1"
 ARG BRANCH="1.3.x"
 
@@ -43,6 +40,9 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     make release
 
 FROM debian:testing-slim
+
+LABEL maintainer="Akito <the@akito.ooo>"
+LABEL version="0.1.0"
 
 RUN useradd --user-group --system --no-log-init \
     --uid 800 --shell /bin/bash murmur
