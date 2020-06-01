@@ -1,7 +1,7 @@
-FROM debian:testing-slim AS build
+FROM debian:buster-slim AS build
 
 ARG TAG="1.3.1-rc1"
-ARG BRANCH="1.3.x"
+ARG BRANCH="master"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -39,10 +39,13 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     qmake -recursive main.pro CONFIG+="no-client grpc" && \
     make release
 
-FROM debian:testing-slim
+FROM debian:buster-slim
 
 LABEL maintainer="Akito <the@akito.ooo>"
 LABEL version="0.1.0"
+
+# Not necessary, but the server log shows timestamps.
+ARG TZ="Europe/Berlin"
 
 RUN useradd --user-group --system --no-log-init \
     --uid 800 --shell /bin/bash murmur
@@ -51,7 +54,9 @@ RUN apt-get update && apt-get install -y \
     libcap2 \
     libzeroc-ice3.7 \
     '^libprotobuf[0-9]+$' \
-    '^libgrpc[0-9]+$' \
+    # https://github.com/mumble-voip/mumble/issues/4201#issuecomment-633502567
+    #'^libgrpc[0-9]+$' \
+    libgrpc6 \
     libgrpc++1 \
     libavahi-compat-libdnssd1 \
     libqt5core5a \
@@ -62,6 +67,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /root/mumble/release/murmurd /usr/bin/murmurd
+
+ENV TZ=${TZ}
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 EXPOSE 64738/tcp
 EXPOSE 64738/udp
