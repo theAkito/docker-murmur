@@ -36,6 +36,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /root/mumble
 
 RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
+    # https://github.com/mumble-voip/mumble/issues/6161#issuecomment-1620593761
+    git submodule update --init --recursive && \
     git fetch --all --tags --prune && \
     # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
     # git checkout ${BRANCH} && \
