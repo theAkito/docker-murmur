@@ -6,28 +6,32 @@ ARG BRANCH="master"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    git \
     build-essential \
+    cmake \
     pkg-config \
-    qt5-default \
+    qtbase5-dev \
+    qtchooser \
+    qt5-qmake \
+    qtbase5-dev-tools \
+    qttools5-dev \
+    qttools5-dev-tools \
+    libqt5svg5-dev \
     libboost-dev \
-    libasound2-dev \
     libssl-dev \
-    libspeechd-dev \
-    libzeroc-ice-dev \
-    libpulse-dev \
-    libcap-dev \
     libprotobuf-dev \
     protobuf-compiler \
-    protobuf-compiler-grpc \
     libprotoc-dev \
-    libogg-dev \
-    libavahi-compat-libdnssd-dev \
-    libsndfile1-dev \
-    libgrpc++-dev \
+    libcap-dev \
     libxi-dev \
-    libbz2-dev \
-    qtcreator
+    libasound2-dev \
+    libogg-dev \
+    libsndfile1-dev \
+    libspeechd-dev \
+    libavahi-compat-libdnssd-dev \
+    libxcb-xinerama0 \
+    libzeroc-ice-dev \
+    libpoco-dev \
+    g++-multilib
 
 WORKDIR /root/mumble
 
@@ -36,8 +40,12 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
     # git checkout ${BRANCH} && \
     git checkout tags/${TAG} && \
-    qmake -recursive main.pro CONFIG+="no-client grpc" && \
-    make release
+    # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/build_linux.md#running-cmake
+    mkdir build && cd build && \
+    # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/cmake_options.md#available-options
+    cmake -Dserver=ON -Dclient=OFF -DCMAKE_BUILD_TYPE=Release -Dice=ON -Dice=ON ..
+    # qmake -recursive main.pro CONFIG+="no-client grpc" && \
+    # make release
 
 FROM debian:buster-slim
 
