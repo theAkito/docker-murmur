@@ -1,4 +1,4 @@
-FROM debian:buster-slim AS build
+FROM debian:bookworm-slim AS build
 
 ARG TAG="v1.4.287"
 ARG BRANCH="master"
@@ -47,7 +47,7 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     # qmake -recursive main.pro CONFIG+="no-client grpc" && \
     # make release
 
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 
 LABEL maintainer="Akito <the@akito.ooo>"
 LABEL version="0.1.0"
