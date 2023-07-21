@@ -30,8 +30,7 @@ RUN apt-get update && apt-get install -y \
     libavahi-compat-libdnssd-dev \
     libxcb-xinerama0 \
     libzeroc-ice-dev \
-    libpoco-dev \
-    g++-multilib
+    libpoco-dev
 
 WORKDIR /root/mumble
 
@@ -43,7 +42,9 @@ RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/build_linux.md#running-cmake
     mkdir build && cd build && \
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/cmake_options.md#available-options
-    cmake -Dserver=ON -Dclient=OFF -DCMAKE_BUILD_TYPE=Release -Dice=ON -Dice=ON ..
+    # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/cmake_options.md#overlay-xcompile
+    # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/build_linux.md#dependencies
+    cmake -Dserver=ON -Dclient=OFF -DCMAKE_BUILD_TYPE=Release -Dice=ON -Dice=ON -Doverlay-xcompile=OFF ..
     # qmake -recursive main.pro CONFIG+="no-client grpc" && \
     # make release
 
