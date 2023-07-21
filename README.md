@@ -38,7 +38,7 @@ $ docker logs -f murmur 2>&1 | grep Password
 
 
 ## License
-Copyright (C) 2020  Akito <the@akito.ooo>
+Copyright (C) 2020-2023  Akito <the@akito.ooo>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
