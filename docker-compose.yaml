@@ -14,10 +14,10 @@ services:
         protocol: udp
         mode: host
       # gRPC API Port
-      - published: 50051
-        target: 50051
+      - published: 6502
+        target: 6502
         protocol: tcp
         mode: host
     volumes:
       # Change mountpoint (left part) to your needs.
-      - '/home/murmur/data:/data'
+      - './data:/data'

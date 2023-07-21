@@ -1,6 +1,6 @@
 FROM debian:buster-slim AS build
 
-ARG TAG="1.3.1-rc1"
+ARG TAG="v1.4.287"
 ARG BRANCH="master"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -34,8 +34,8 @@ WORKDIR /root/mumble
 RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
     git fetch --all --tags --prune && \
     # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
-    #git checkout tags/${TAG} && \
-    git checkout ${BRANCH} && \
+    # git checkout ${BRANCH} && \
+    git checkout tags/${TAG} && \
     qmake -recursive main.pro CONFIG+="no-client grpc" && \
     make release
 
