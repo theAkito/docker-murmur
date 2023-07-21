@@ -62,9 +62,7 @@ RUN apt-get update && apt-get install -y \
     libcap2 \
     libzeroc-ice3.7 \
     '^libprotobuf[0-9]+$' \
-    # https://github.com/mumble-voip/mumble/issues/4201#issuecomment-633502567
-    #'^libgrpc[0-9]+$' \
-    libgrpc6 \
+    '^libgrpc[0-9]+$' \
     libgrpc++1 \
     libavahi-compat-libdnssd1 \
     libqt5core5a \
