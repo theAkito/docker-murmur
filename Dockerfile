@@ -1,6 +1,7 @@
 FROM debian:bookworm-slim AS build
 
-ARG TAG="v1.4.287"
+# https://github.com/mumble-voip/mumble/issues/5968#issuecomment-1320567610
+ARG TAG="v1.5.517"
 ARG BRANCH="master"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -36,20 +37,20 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /root/mumble
 
 RUN git clone https://github.com/mumble-voip/mumble.git /root/mumble && \
-    # https://github.com/mumble-voip/mumble/issues/6161#issuecomment-1620593761
-    git submodule update --init --recursive && \
     git fetch --all --tags --prune && \
     # https://github.com/mumble-voip/mumble/issues/4065#issuecomment-633082522
     # git checkout ${BRANCH} && \
     git checkout tags/${TAG} && \
+    # https://github.com/mumble-voip/mumble/issues/6161#issuecomment-1620593761
+    git submodule update --init --recursive && \
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/build_linux.md#running-cmake
     mkdir build && cd build && \
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/cmake_options.md#available-options
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/cmake_options.md#overlay-xcompile
     # https://github.com/mumble-voip/mumble/blob/master/docs/dev/build-instructions/build_linux.md#dependencies
-    cmake -Dserver=ON -Dclient=OFF -DCMAKE_BUILD_TYPE=Release -Dice=ON -Dice=ON -Doverlay-xcompile=OFF ..
-    # qmake -recursive main.pro CONFIG+="no-client grpc" && \
-    # make release
+    cmake -Dserver=ON -Dclient=OFF -DCMAKE_BUILD_TYPE=Release -Dice=ON -Dtracy=OFF -Doverlay-xcompile=OFF .. && \
+    make && \
+    strip --remove-section=.note.ABI-tag /root/mumble/build/mumble-server
 
 FROM debian:bookworm-slim
 
@@ -76,7 +77,7 @@ RUN apt-get update && apt-get install -y \
     libqt5dbus5 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /root/mumble/release/murmurd /usr/bin/murmurd
+COPY --from=build /root/mumble/build/mumble-server /usr/bin/murmurd
 
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
