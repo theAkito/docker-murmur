@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - docker/build-push-action#910
     tags:
       - "*.*.*"
   pull_request:

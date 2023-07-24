@@ -77,7 +77,8 @@ RUN apt-get update && apt-get install -y \
     libqt5dbus5 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /root/mumble/build/mumble-server /usr/bin/murmurd
+# Wrong on purpose to test https://github.com/docker/build-push-action/issues/910 !
+COPY --from=build /root/mumble/build/mumble-server/not-found /usr/bin/murmurd
 
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
